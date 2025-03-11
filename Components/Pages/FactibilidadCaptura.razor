@@ -1,0 +1,89 @@
+﻿@page "/nueva-factibilidad"
+@* @using ProtelBlazorApp.Data // Reemplaza con tu namespace correcto *@
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<h3>Nuevo Estudio de Factibilidad</h3>
+
+<EditForm Model="@nuevaFactibilidad" OnValidSubmit="HandleSubmit">
+    // Agrega servicio mudblazor al contenedor, este es un servicio de componentes de Blazor para Material Design
+    builder.Services.AddMudServices(config =>
+    {
+        config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+    });
+    <MudGrid>
+        <!-- Nombre del Proyecto -->
+        <MudItem xs="12" md="6">
+            <MudTextField @bind-Value="nuevaFactibilidad.NombreProyecto" 
+                        Label="Nombre del Proyecto"
+                        Required="true"
+                        RequiredError="Campo obligatorio"/>
+        </MudItem>
+
+        <!-- Descripción -->
+        <MudItem xs="12">
+            <MudTextField @bind-Value="nuevaFactibilidad.Descripcion" 
+                        Label="Descripción"
+                        Required="true"
+                        RequiredError="Campo obligatorio"/>
+        </MudItem>
+
+        <!-- Ubicación -->
+        <MudItem xs="12" md="6">
+            <MudTextField @bind-Value="nuevaFactibilidad.Ubicacion" 
+                        Label="Ubicación"
+                        Required="true"/>
+        </MudItem>
+
+        <!-- Fecha Solicitud -->
+        <MudItem xs="12" md="6">
+            
+        </MudItem>
+
+        <!-- Fecha Respuesta (Opcional) -->
+        <MudItem xs="12" md="6">
+            <MudCheckBox @bind-Checked="mostrarFechaRespuesta" T="bool"
+                       Label="¿Tiene fecha de respuesta?"/>
+            @if (mostrarFechaRespuesta)
+            {
+                <MudDatePicker Label="Fecha de Respuesta" 
+                             @bind-Date="nuevaFactibilidad.FechaRespuesta"/>
+            }
+        </MudItem>
+
+        <!-- Botón de Envío -->
+        <MudItem xs="12" class="mt-4">
+            <MudButton Variant="Variant.Filled" 
+                     Color="Color.Primary" 
+                     ButtonType="ButtonType.Submit">
+                Guardar
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    private Factibilidad nuevaFactibilidad = new Factibilidad();
+    private bool mostrarFechaRespuesta = false;
+
+    private async Task HandleSubmit()
+    {
+        // Aquí iría tu lógica para guardar en la BD
+        // Ejemplo básico:
+        /*
+        await tuServicio.InsertFactibilidad(nuevaFactibilidad);
+        */
+        
+        Snackbar.Add("Estudio guardado exitosamente!", Severity.Success);
+        Navigation.NavigateTo("/");
+    }
+
+    public class Factibilidad
+    {
+        public string NombreProyecto { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        public string Ubicacion { get; set; } = string.Empty;
+        public DateTime FechaSolicitud { get; set; } = DateTime.Now;
+        public DateTime? FechaRespuesta { get; set; }
+    }
+}

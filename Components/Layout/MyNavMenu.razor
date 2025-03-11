@@ -1,0 +1,36 @@
+﻿<MudNavMenu Dense="true" Class="clean-menu">  
+   <!-- Espacio reservado para icono principal -->  
+   <div class="menu-icon-space pa-4">  
+       <MudIcon Icon="@Icons.Material.Filled.Assessment" Class="menu-main-icon" />  
+   </div>  
+
+   <!-- Elementos del Menú -->  
+   <MudNavLink Href="/" Class="menu-item" Match="NavLinkMatch.All">  
+       <MudIcon Icon="@Icons.Material.Filled.Dashboard" Class="mr-2" /> <!-- Solo dashboard con icono -->  
+       Dashboard  
+   </MudNavLink>
+
+    <MudNavLink Href="/estudiofac2" Class="menu-item">
+        Estudios <!-- Sin icono -->  
+    </MudNavLink>  
+
+
+   <MudNavLink Href="/cliente" Class="menu-item">  
+       Clientes <!-- Sin icono -->  
+   </MudNavLink>  
+
+   <!-- Grupo de Configuración -->  
+   <MudNavGroup Title="Configuración" Class="menu-group">  
+       <MudNavLink Href="/usuarios" Class="submenu-item">  
+           Usuarios <!-- Sin icono -->  
+       </MudNavLink>  
+       <MudNavLink Href="/parametros" Class="submenu-item">  
+           Parámetros <!-- Sin icono -->  
+       </MudNavLink>  
+   </MudNavGroup>  
+
+   <MudNavLink Href="/acerca" Class="menu-item">  
+       <MudIcon Icon="@Icons.Material.Filled.Info" Class="mr-2" /> <!-- Icono solo en Acerca de -->  
+       Acerca de  
+   </MudNavLink>  
+</MudNavMenu>

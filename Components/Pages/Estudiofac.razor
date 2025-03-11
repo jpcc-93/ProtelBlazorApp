@@ -1,0 +1,62 @@
+﻿@page "/estudiofac" // Define la ruta de la página
+@using MudBlazor // Importa la librería MudBlazor
+@inject ISnackbar Snackbar // Inyecta el servicio ISnackbar para mostrar notificaciones
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" /> // Importa la fuente Roboto
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" /> // Importa los estilos de MudBlazor
+
+<MudCard Class="pa-4" Elevation="10"> // Define una tarjeta con padding y elevación
+    <MudCardHeader Title="Registrar Estudio de Factibilidad" /> // Encabezado de la tarjeta
+    <MudCardContent> // Contenido de la tarjeta
+        <MudForm @ref="form" Model="factibilidad" OnValidSubmit="HandleValidSubmit"> // Define un formulario con referencia y modelo
+            <MudTextField @bind-Value="factibilidad.NombreProyecto" Label="Nombre del Proyecto" Required="true" /> // Campo de texto para el nombre del proyecto
+            
+            <MudSelect T="int?" @bind-Value="factibilidad.IdCliente" Label="Cliente"> // Selección de cliente
+                <MudSelectItem Value="@(null as int?)">-- Seleccione --</MudSelectItem> // Opción por defecto
+                <MudSelectItem Value="1">Cliente 1</MudSelectItem> // Opción Cliente 1
+                <MudSelectItem Value="2">Cliente 2</MudSelectItem> // Opción Cliente 2
+                <MudSelectItem Value="3">Cliente 3</MudSelectItem> // Opción Cliente 3
+            </MudSelect>
+
+            <MudSelect T="int" @bind-Value="factibilidad.IdEstado" Label="Estado" Required="true"> // Selección de estado
+                <MudSelectItem Value="1">Pendiente</MudSelectItem> // Opción Pendiente
+                <MudSelectItem Value="2">En Proceso</MudSelectItem> // Opción En Proceso
+                <MudSelectItem Value="3">Aprobado</MudSelectItem> // Opción Aprobado
+                <MudSelectItem Value="4">Rechazado</MudSelectItem> // Opción Rechazado
+            </MudSelect>
+
+            <MudTextField @bind-Value="factibilidad.Descripcion" Label="Descripción" Lines="4" Required="true" /> // Campo de texto para la descripción
+            <MudTextField @bind-Value="factibilidad.Ubicacion" Label="Ubicación" Required="true" /> // Campo de texto para la ubicación
+
+            <MudDatePicker @bind-Date="factibilidad.FechaSolicitud" Label="Fecha de Solicitud" Required="true" /> // Selector de fecha para la solicitud
+            <MudDatePicker @bind-Date="factibilidad.FechaRespuesta" Label="Fecha de Respuesta" /> // Selector de fecha para la respuesta
+
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"> // Botón de envío del formulario
+                Registrar
+            </MudButton>
+        </MudForm>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private MudForm form = null!; // Referencia al formulario
+    private Factibilidad factibilidad = new Factibilidad(); // Instancia del modelo Factibilidad
+
+    private async Task HandleValidSubmit() // Método que se ejecuta al enviar el formulario
+    {
+        // Aquí se debe llamar al servicio que guarde la información en la base de datos.
+        Snackbar.Add("Estudio de factibilidad registrado correctamente.", Severity.Success); // Muestra una notificación de éxito
+        factibilidad = new Factibilidad(); // Reinicia el modelo Factibilidad
+        await form.ResetAsync(); // Reinicia el formulario
+    }
+
+    public class Factibilidad // Clase que representa el modelo Factibilidad
+    {
+        public int? IdCliente { get; set; } // Opcional, ya que el estudio puede no estar asociado a un cliente registrado
+        public string NombreProyecto { get; set; } = string.Empty; // Nombre del proyecto
+        public int IdEstado { get; set; } // Estado del proyecto
+        public string Descripcion { get; set; } = string.Empty; // Descripción del proyecto
+        public string Ubicacion { get; set; } = string.Empty; // Ubicación del proyecto
+        public DateTime? FechaSolicitud { get; set; } = DateTime.Today; // Fecha de solicitud
+        public DateTime? FechaRespuesta { get; set; } // Fecha de respuesta
+    }
+}

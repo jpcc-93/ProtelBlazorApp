@@ -1,0 +1,79 @@
+﻿@page "/estudiofac2"
+@using MudBlazor
+@inject ISnackbar Snackbar
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+<MudCard Class="pa-4" Elevation="10">
+    <MudCardHeader Title="Registrar Estudio de Factibilidad" />
+    <MudCardContent>
+        <MudForm @ref="form" Model="factibilidadModel" OnValidSubmit="HandleValidSubmit">
+            <MudGrid Spacing="2">
+                <!-- Opcional: Selección de Cliente -->
+                <MudItem xs="12" sm="6">
+@*                     <MudSelect T="int?" Label="Cliente (opcional)" @bind-Value="factibilidadModel.IdCliente">
+                        <MudSelectItem T="int?" Value="@((int?)null)">-- Seleccione --</MudSelectItem>
+                        <MudSelectItem T="int?" Value="1">Cliente 1</MudSelectItem>
+                        <MudSelectItem T="int?" Value="2">Cliente 2</MudSelectItem>
+                    </MudSelect> *@
+                </MudItem>
+
+                <!-- Estado del estudio (lookup: EstadoFactibilidad) -->
+                <MudItem xs="12" sm="6">
+@*                     <MudSelect T="string" Label="Estado" @bind-Value="factibilidadModel.Estado" Required="true">
+                        <MudSelectItem Value="Pendiente">Pendiente</MudSelectItem>
+                        <MudSelectItem Value="En proceso">En proceso</MudSelectItem>
+                        <MudSelectItem Value="Aprobado">Aprobado</MudSelectItem>
+                        <MudSelectItem Value="Rechazado">Rechazado</MudSelectItem>
+                    </MudSelect> *@
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="factibilidadModel.NombreProyecto" Label="Nombre del Proyecto" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="factibilidadModel.Ubicacion" Label="Ubicación" Required="true" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="factibilidadModel.Descripcion" Label="Descripción" Lines="4" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="factibilidadModel.FechaSolicitud" Label="Fecha de Solicitud" Disabled="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="factibilidadModel.FechaRespuesta" Label="Fecha de Respuesta" />
+                </MudItem>
+            </MudGrid>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+                Registrar Estudio
+            </MudButton>
+        </MudForm>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private MudForm form;
+    private FactibilidadModel factibilidadModel = new FactibilidadModel() { FechaSolicitud = DateTime.Today };
+
+    private async Task HandleValidSubmit()
+    {
+        // Lógica para guardar el estudio de factibilidad en la BD.
+        Snackbar.Add("Estudio de factibilidad registrado correctamente.", Severity.Success);
+        factibilidadModel = new FactibilidadModel() { FechaSolicitud = DateTime.Today };
+
+        await InvokeAsync(() => form.ResetValidation());
+    }
+
+    public class FactibilidadModel
+    {
+        // Opcional: ID del cliente (relacionado con la tabla Cliente)
+        public int? IdCliente { get; set; }
+        // Este campo representa id_estado (lookup: EstadoFactibilidad)
+        public string Estado { get; set; }
+        public string NombreProyecto { get; set; }
+        public string Descripcion { get; set; }
+        public string Ubicacion { get; set; }
+        public DateTime? FechaSolicitud { get; set; }
+        public DateTime? FechaRespuesta { get; set; }
+    }
+}

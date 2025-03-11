@@ -1,0 +1,55 @@
+﻿@page "/cliente"
+@using MudBlazor
+@inject ISnackbar Snackbar
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+<MudCard Class="pa-4" Elevation="10">
+    <MudCardHeader Title="Registrar Cliente" />
+    <MudCardContent>
+        <MudForm @ref="form" Model="clienteModel" OnValidSubmit="HandleValidSubmit">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="clienteModel.Nombre" Label="Nombre" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="clienteModel.Direccion" Label="Dirección" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="clienteModel.Contacto" Label="Contacto" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudSelect T="string" Label="Estado" @bind-Value="clienteModel.Estado" Required="true">
+@*                         <MudSelectItem Value="Activo">Activo</MudSelectItem>
+                        <MudSelectItem Value="Inactivo">Inactivo</MudSelectItem> *@
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+                Registrar Cliente
+            </MudButton>
+        </MudForm>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private MudForm form;
+    private ClienteModel clienteModel = new ClienteModel();
+
+    private async Task HandleValidSubmit()
+    {
+        // Aquí se ejecutaría la lógica para guardar el cliente en la BD.
+        Snackbar.Add("Cliente registrado correctamente.", Severity.Success);
+        clienteModel = new ClienteModel();
+        await InvokeAsync(() => form.ResetValidation());
+    }
+
+    public class ClienteModel
+    {
+        public string Nombre { get; set; }
+        public string Direccion { get; set; }
+        public string Contacto { get; set; }
+        // Este campo representa id_estado en la BD (lookup: EstadoCliente)
+        public string Estado { get; set; }
+    }
+}

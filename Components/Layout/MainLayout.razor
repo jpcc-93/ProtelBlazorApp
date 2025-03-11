@@ -1,0 +1,107 @@
+﻿@inherits LayoutComponentBase
+
+@* Proveedor de temas de MudBlazor *@
+<MudThemeProvider Theme="@MyCustomTheme" />
+
+<!-- Proveedor de popovers de MudBlazor -->
+<MudPopoverProvider />
+
+<!-- Proveedor de diálogos de MudBlazor -->
+<MudDialogProvider />
+
+<!-- Proveedor de snackbars de MudBlazor -->
+<MudSnackbarProvider />
+
+<MudLayout>
+    <!-- Drawer Responsivo -->
+
+    <MudAppBar>
+
+
+        <MudIconButton Title="ocultar" Icon="@Icons.Material.Filled.Menu" @onclick="menuabierto">
+        </MudIconButton>
+        <MudSpacer />
+        <MudMenu Dense
+             Variant="Variant.Text"
+             Size="Size.Medium"
+             Color="Color.Inherit"
+             Icon="@Icons.Material.TwoTone.MoreVert">
+
+
+
+            <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+                 IconColor="Color.Primary"
+                 Label="Settings">
+                <MudMenuItem Icon="@Icons.Material.TwoTone.DarkMode"
+                         IconColor="Color.Secondary"
+                         Label="Dark Theme" />
+            </MudMenu>
+            
+
+            <MudDivider /> 
+
+            <MudMenuItem Href="/"
+                     ForceLoad
+                     Icon="@Icons.Material.TwoTone.Login"
+                     IconColor="Color.Primary"
+                     Label="Sign In" />
+
+            <MudMenuItem Href="/"
+                     ForceLoad
+                     Icon="@Icons.Material.TwoTone.Logout"
+                     IconColor="Color.Primary"
+                     Label="Sign Out" />
+        </MudMenu>
+        
+        <MudIconButton Icon="@Icons.Material.Outlined.PeopleAlt" Color="Color.Inherit" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen"
+               Color="Color.Primary"
+               Variant="DrawerVariant.Responsive"
+               Breakpoint="Breakpoint.Md">
+        <MyNavMenu />
+    </MudDrawer>
+    <MudText>Drawer: @(_drawerOpen ? "Abierto" : "Cerrado")</MudText>
+    <!-- ... resto del código ... -->
+
+
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+    bool _abierto = false;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+
+    }
+    void menuabierto()
+    {
+        _abierto = !_abierto;
+    }
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            PaletteLight = new PaletteLight()
+            {
+                Primary = "#0077BE",
+                Secondary = "#005A8F",
+                AppbarBackground = "#3295E6",
+                Background = "#F8FAFD",
+            },
+            PaletteDark = new PaletteDark()
+            {
+                Primary = Colors.Blue.Darken1,
+                Background = "#F8FAFD"
+            },
+
+            LayoutProperties = new LayoutProperties()
+            {
+                DrawerWidthLeft = "260px",
+                DrawerWidthRight = "300px"
+            }
+        };
+};

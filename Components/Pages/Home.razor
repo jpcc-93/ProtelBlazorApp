@@ -1,0 +1,125 @@
+﻿@page "/"
+@using MudBlazor
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+
+
+<MudGrid Spacing="2" Justify="Justify.Center">
+    <!-- Fila 1: Tarjetas de Resumen -->
+    <MudItem xs="12" md="4">
+        <MudCard Elevation="10" Class="pa-4">
+            <MudCardContent>
+                <MudText Typo="Typo.h6" Class="mb-2">Clientes Registrados</MudText>
+                <MudText Typo="Typo.h3" Class="text-primary">@_totalClientes</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.People" Class="float-right" Color="Color.Primary"/>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    
+    <MudItem xs="12" md="4">
+        <MudCard Elevation="10" Class="pa-4">
+            <MudCardContent>
+                <MudText Typo="Typo.h6" Class="mb-2">Estudios Activos</MudText>
+                <MudText Typo="Typo.h3" Class="text-secondary">@_estudiosActivos</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.Assignment" Class="float-right" Color="Color.Secondary"/>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    
+    <MudItem xs="12" md="4">
+        <MudCard Elevation="10" Class="pa-4">
+            <MudCardContent>
+                <MudText Typo="Typo.h6" Class="mb-2">Cobertura Total</MudText>
+                <MudText Typo="Typo.h3" Class="text-info">@($"{_cobertura}%")</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.Map" Class="float-right" Color="Color.Info"/>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Fila 2: Gráfico -->
+    <MudItem xs="12" md="8" Class="mt-4">
+        <MudCard Elevation="10">
+            <MudCardHeader Title="Progreso de Estudios (Últimos 6 meses)" />
+            <MudCardContent>
+                <MudChart Height="300px" ChartType="ChartType.Line" 
+                         OptionsObject="_chartOptions" 
+                         InputData="null" />
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Fila 3: Tabla de Estudios Recientes -->
+    <MudItem xs="12" md="4" Class="mt-4">
+        <MudCard Elevation="10">
+            <MudCardHeader Title="Últimos Estudios" />
+            <MudCardContent>
+                <MudTable Items="@_ultimosEstudios" Hover="true" Dense="true">
+                    <HeaderContent>
+                        <MudTh>Nombre</MudTh>
+                        <MudTh>Cliente</MudTh>
+                        <MudTh>Estado</MudTh>
+                        <MudTh>Fecha</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.Nombre</MudTd>
+                        <MudTd>@context.Cliente</MudTd>
+                        <MudTd>
+                            @* <MudChip Color="@GetStatusColor(context.Estado)" Label="@context.Estado" /> *@
+                        </MudTd>
+                        <MudTd>@context.Fecha.ToShortDateString()</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    // Datos falsos para demostración
+    private int _totalClientes = 45;
+    private int _estudiosActivos = 12;
+    private int _cobertura = 75;
+    
+    // Datos para el gráfico
+    private List<ChartSeries> _chartData = new()
+    {
+        new ChartSeries { Name = "Estudios", Data = new double[] { 15, 20, 35, 40, 30, 45 } }
+    };
+
+    private ChartOptions _chartOptions = new()
+    {
+        YAxisTicks = 5,
+        XAxisLines = true,
+        YAxisLines = true,
+        // DisableLegend = true
+    };
+
+    // Datos para la tabla
+    private List<Estudio> _ultimosEstudios = new()
+    {
+        new Estudio { Nombre = "Zona Norte", Cliente = "Cooperativa ABC", Estado = "En Proceso", Fecha = DateTime.Now.AddDays(-2) },
+        new Estudio { Nombre = "Sector Sur", Cliente = "Municipalidad XYZ", Estado = "Completado", Fecha = DateTime.Now.AddDays(-5) },
+        new Estudio { Nombre = "Área Rural 4", Cliente = "Asociación Campesina", Estado = "Pendiente", Fecha = DateTime.Now.AddDays(-1) }
+    };
+
+    private Color GetStatusColor(string estado)
+    {
+        return estado switch
+        {
+            "Completado" => Color.Success,
+            "En Proceso" => Color.Warning,
+            "Pendiente" => Color.Error,
+            _ => Color.Default
+        };
+    }
+
+    public class Estudio
+    {
+        public string Nombre { get; set; }
+        public string Cliente { get; set; }
+        public string Estado { get; set; }
+        public DateTime Fecha { get; set; }
+    }
+}
